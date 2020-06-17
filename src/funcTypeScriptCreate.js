@@ -1,5 +1,18 @@
 const funcComment2FuncInfo = require ("./funcComment2FuncInfo");
 
+function generateDescription(leadingComments){
+  if(!leadingComments) return '';
+  const commentlines = leadingComments[0].value.split('\n');
+  if(commentlines.length>1){
+    return `/*${leadingComments[0].value}*/`
+  }
+  return `//${leadingComments[0].value}`
+}
+
+/**
+ * 方法模块转d.ts方法
+ * @param {Object} funcNode 方法AST模块
+ */
 function funcTypeScriptCreate(funcNode){
   const funcTypeInfo = funcComment2FuncInfo(funcNode.leadingComments?funcNode.leadingComments[0]:undefined);
   const funcName = funcNode.id.name;
@@ -17,7 +30,7 @@ function funcTypeScriptCreate(funcNode){
   }
 
   return `
-/*${funcNode.leadingComments?funcNode.leadingComments[0].value:''}*/
+${generateDescription(funcNode.leadingComments)}
 declare function ${funcName}(${paramsStr.join(', ')}): ${returnType}
   `
 }

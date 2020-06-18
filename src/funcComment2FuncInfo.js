@@ -1,3 +1,5 @@
+const paramsTypeFlat = require('./paramsTypeFlat');
+
 /**
  * 方法注释转方法类型描述
  * @param {Object} comment 注释
@@ -44,6 +46,7 @@ function funcComment2FuncInfo(comment) {
     if (!funcDesc) return;
     funcInfo.description = funcDesc.groups.desc;
   });
+  funcInfo.params = paramsTypeFlat(funcInfo.params);
   return funcInfo;
 }
 

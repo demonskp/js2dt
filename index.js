@@ -1,7 +1,6 @@
 const parser = require("@babel/parser");
 const fs = require('fs');
 const path = require('path');
-const { visit } = require("ast-types");
 const funcTypeScriptCreate = require("./src/funcTypeScriptCreate");
 
 function transformCode2Ast(code) {

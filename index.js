@@ -1,7 +1,6 @@
 const parser = require("@babel/parser");
 const fs = require('fs');
 const path = require('path');
-const funcTypeScriptCreate = require("./src/funcTypeScriptCreate");
 
 function transformCode2Ast(code) {
   return parser.parse(code, {
@@ -39,5 +38,6 @@ function transformCode2Ast(code) {
 fs.readFile(path.resolve(__dirname,'./test.js'),(err,data)=>{
 
   const ast = transformCode2Ast(data.toString());
-  console.log(funcTypeScriptCreate(ast.program.body[0]));
+  console.log(ast.program.body);
+  console.log(ast.program.body[0].body.body);
 })

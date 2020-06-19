@@ -6,7 +6,7 @@ function object2arr(paramsObj) {
   if (!paramsObj) return [];
   const result = [];
   if (paramsObj) {
-    Object.keys().forEach((att) => {
+    Object.keys(paramsObj).forEach((att) => {
       const type = {
         name: att,
         type: JSON.stringify(paramsObj[att]),

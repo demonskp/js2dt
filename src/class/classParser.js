@@ -25,6 +25,7 @@ function propertyParser(node) {
  */
 function methodParser(node) {
   if (!node) return {};
+  node.value.leadingComments = node.leadingComments;
   const funcParseNode = funcParse(node.value);
   const result = {
     ...funcParseNode,
@@ -55,6 +56,7 @@ function classMethodStr(methodNode) {
   }
 
   return `
+  ${generateDescription(methodNode.leadingComments)}
   ${async ? 'async ' : ''}${staticFlag ? 'static ' : ''}${methodNode.funcName}(${paramsStr.join(', ')}):${returnType};
   `;
 }

@@ -29,6 +29,7 @@ function methodParser(node) {
   const result = {
     ...funcParseNode,
     funcName: node.key.name,
+    static: node.static,
   };
   return result;
 }
@@ -41,7 +42,7 @@ function classMethodStr(methodNode) {
   if (!methodNode) return '';
 
   const {
-    params, paramsType, async, returnType,
+    params, paramsType, async, returnType, static: staticFlag,
   } = methodNode;
 
   const paramsStr = [];
@@ -54,7 +55,7 @@ function classMethodStr(methodNode) {
   }
 
   return `
-  ${async ? 'async ' : ''}${methodNode.funcName}(${paramsStr.join(', ')}):${returnType};
+  ${async ? 'async ' : ''}${staticFlag ? 'static ' : ''}${methodNode.funcName}(${paramsStr.join(', ')}):${returnType};
   `;
 }
 

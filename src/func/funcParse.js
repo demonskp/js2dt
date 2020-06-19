@@ -25,7 +25,7 @@ function funcParse(funcNode) {
     paramsType,
     returnType,
     generator: funcNode.generator,
-    async: funcNode.generator,
+    async: funcNode.async,
   };
 }
 

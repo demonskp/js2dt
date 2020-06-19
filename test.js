@@ -9,7 +9,7 @@ class Math {
    * @param {number} a 加数
    * @param {number} b 加数
    */
-  add(a, b) {
+  async add(a, b) {
     return a + b;
   }
 }

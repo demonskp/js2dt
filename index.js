@@ -1,6 +1,10 @@
 const parser = require("@babel/parser");
 const fs = require('fs');
 const path = require('path');
+const {
+  classParser,
+  classStr
+} = require("./src/class/classParser");
 
 function transformCode2Ast(code) {
   return parser.parse(code, {
@@ -13,7 +17,9 @@ function transformCode2Ast(code) {
       "classProperties",
       "classPrivateProperties",
       "classPrivateMethods",
-      ["decorators", { decoratorsBeforeExport: false }],
+      ["decorators", {
+        decoratorsBeforeExport: false
+      }],
       "doExpressions",
       "dynamicImport",
       "exportDefaultFrom",
@@ -27,7 +33,9 @@ function transformCode2Ast(code) {
       "objectRestSpread",
       "optionalCatchBinding",
       "optionalChaining",
-      ["pipelineOperator", { proposal: "minimal" }],
+      ["pipelineOperator", {
+        proposal: "minimal"
+      }],
       "throwExpressions",
       "topLevelAwait",
       "estree",
@@ -35,9 +43,10 @@ function transformCode2Ast(code) {
   });
 }
 
-fs.readFile(path.resolve(__dirname,'./test.js'),(err,data)=>{
+fs.readFile(path.resolve(__dirname, './test.js'), (err, data) => {
 
   const ast = transformCode2Ast(data.toString());
-  console.log(ast.program.body);
-  console.log(ast.program.body[0].body.body);
+  const classParseNode = classParser(ast.program.body[0]);
+  // console.log(classParseNode)
+  console.log(classStr(classParseNode));
 })

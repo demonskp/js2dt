@@ -1,36 +1,121 @@
+const {
+  getType,
+  generateDescription
+} = require("../utils");
+const {
+  funcParse
+} = require("../func/funcParse");
 
-function propertyParser(node){
-  if(!node) return {};
-
-  return {};
-}
-
-function methodParser(node){
-  return {};
-}
-
-function classParser(classNode){
-  if(!classNode) return;
+/**
+ * 类属性对象解析
+ * @param {Object} node 类属性对象
+ */
+function propertyParser(node) {
+  if (!node) return {};
   const result = {
-    start:classNode.start,
-    end:classNode.end,
-    name:classNode.id.name,
-    propertys:[],
-    methods:[]
+    key: node.key.name,
+    type: getType(node.value.value)
+  }
+  return result;
+}
+
+/**
+ * 类方法对象解析
+ * @param {Object} node 类方法对象
+ */
+function methodParser(node) {
+  if (!node) return {};
+  const funcParseNode = funcParse(node.value);
+  const result = {
+    ...funcParseNode,
+    funcName:node.key.name
+  }
+  return result;
+}
+
+/**
+ * 类对象解析
+ * @param {Object} classNode 类对象
+ */
+function classParser(classNode) {
+  if (!classNode) return;
+  const result = {
+    leadingComments: classNode.leadingComments,
+    start: classNode.start,
+    end: classNode.end,
+    name: classNode.id.name,
+    propertys: [],
+    methods: [],
   };
 
   const classbodyList = classNode.body.body;
 
-  classbodyList.forEach((node)=>{
+  classbodyList.forEach((node) => {
     switch (node.type) {
       case 'ClassProperty':
         result.propertys.push(propertyParser(node));
         break;
       case 'MethodDefinition':
-        result.propertys.push(methodParser(node));
+        result.methods.push(methodParser(node));
         break;
       default:
         break;
     }
-  })
+  });
+
+  return result;
 }
+
+function classStr(classParseNode) {
+  if (!classParseNode) return '';
+
+  const propertyStrList = [];
+  const methodStrList = [];
+
+  classParseNode.propertys.forEach((property) => {
+    propertyStrList.push(
+      `${property.key}:${property.type},`
+    )
+  });
+
+  classParseNode.methods.forEach((method) => {
+    methodStrList.push(classMethodStr(method));
+  });
+
+  return `
+${generateDescription(classParseNode.leadingComments)}
+declare class ${classParseNode.name} {
+
+  ${propertyStrList.join('\n')}
+  ${methodStrList.join('\n')}
+}
+  `
+}
+
+/**
+ * 对象方法解析对象转换字符串
+ * @param {Object} methodNode 方法解析对象
+ */
+function classMethodStr(methodNode){
+  if(!methodNode) return '';
+
+  const {params,paramsType,async,returnType} = methodNode
+
+  let paramsStr = [];
+  for (let i = 0; i < params.length; i++) {
+    let typeStr = ': any';
+    if (paramsType[i]) {
+      typeStr = ': ' + paramsType[i].type;
+    }
+    paramsStr.push(params[i].name + typeStr);
+  }
+
+  return `
+  ${async?'async ':''}${methodNode.funcName}(${paramsStr.join(', ')}):${returnType};
+  `
+}
+
+module.exports = {
+  classParser,
+  classStr
+};

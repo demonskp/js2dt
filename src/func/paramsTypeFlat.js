@@ -2,16 +2,19 @@
  * 将参数对象转化为包含每个属性的数组
  * @param {Object} paramsObj 参数对象
  */
-function object2arr(paramsObj){
-  if(!paramsObj) return [];
+function object2arr(paramsObj) {
+  if (!paramsObj) return [];
   const result = [];
-  for(att in paramsObj){
-    const type = {
-      name:att,
-      type:JSON.stringify(paramsObj[att])
-    };
-    result.push(type);
+  if (paramsObj) {
+    Object.keys().forEach((att) => {
+      const type = {
+        name: att,
+        type: JSON.stringify(paramsObj[att]),
+      };
+      result.push(type);
+    });
   }
+
   return result;
 }
 
@@ -24,7 +27,7 @@ function paramsTypeFlat(paramsType) {
   paramsType.forEach((types) => {
     const {
       name,
-      type
+      type,
     } = types;
     const isObject = (type === 'object' || type === 'Object');
     const hasDot = name.includes('.');
@@ -45,9 +48,9 @@ function paramsTypeFlat(paramsType) {
           attrCach[attr] = type;
           return;
         }
-        attrCach[attr] = attrCach[attr]?attrCach[attr]:{};
+        attrCach[attr] = attrCach[attr] ? attrCach[attr] : {};
         attrCach = attrCach[attr];
-      })
+      });
     }
     // {name:"a.leader",type:"Object"}
     if (isObject && hasDot) {
@@ -58,9 +61,9 @@ function paramsTypeFlat(paramsType) {
           attrCach[attr] = type;
           return;
         }
-        attrCach[attr] = attrCach[attr]?attrCach[attr]:{};
+        attrCach[attr] = attrCach[attr] ? attrCach[attr] : {};
         attrCach = attrCach[attr];
-      })
+      });
     }
   });
   return object2arr(typeCach);

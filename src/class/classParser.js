@@ -1,10 +1,10 @@
 const {
   getType,
-  generateDescription
-} = require("../utils");
+  generateDescription,
+} = require('../utils');
 const {
-  funcParse
-} = require("../func/funcParse");
+  funcParse,
+} = require('../func/funcParse');
 
 /**
  * 类属性对象解析
@@ -14,8 +14,8 @@ function propertyParser(node) {
   if (!node) return {};
   const result = {
     key: node.key.name,
-    type: getType(node.value.value)
-  }
+    type: getType(node.value.value),
+  };
   return result;
 }
 
@@ -28,9 +28,34 @@ function methodParser(node) {
   const funcParseNode = funcParse(node.value);
   const result = {
     ...funcParseNode,
-    funcName:node.key.name
-  }
+    funcName: node.key.name,
+  };
   return result;
+}
+
+/**
+ * 对象方法解析对象转换字符串
+ * @param {Object} methodNode 方法解析对象
+ */
+function classMethodStr(methodNode) {
+  if (!methodNode) return '';
+
+  const {
+    params, paramsType, async, returnType,
+  } = methodNode;
+
+  const paramsStr = [];
+  for (let i = 0; i < params.length; i += 1) {
+    let typeStr = ': any';
+    if (paramsType[i]) {
+      typeStr = `: ${paramsType[i].type}`;
+    }
+    paramsStr.push(params[i].name + typeStr);
+  }
+
+  return `
+  ${async ? 'async ' : ''}${methodNode.funcName}(${paramsStr.join(', ')}):${returnType};
+  `;
 }
 
 /**
@@ -38,7 +63,7 @@ function methodParser(node) {
  * @param {Object} classNode 类对象
  */
 function classParser(classNode) {
-  if (!classNode) return;
+  if (!classNode) return null;
   const result = {
     leadingComments: classNode.leadingComments,
     start: classNode.start,
@@ -74,8 +99,8 @@ function classStr(classParseNode) {
 
   classParseNode.propertys.forEach((property) => {
     propertyStrList.push(
-      `${property.key}:${property.type},`
-    )
+      `${property.key}:${property.type},`,
+    );
   });
 
   classParseNode.methods.forEach((method) => {
@@ -89,33 +114,10 @@ declare class ${classParseNode.name} {
   ${propertyStrList.join('\n')}
   ${methodStrList.join('\n')}
 }
-  `
-}
-
-/**
- * 对象方法解析对象转换字符串
- * @param {Object} methodNode 方法解析对象
- */
-function classMethodStr(methodNode){
-  if(!methodNode) return '';
-
-  const {params,paramsType,async,returnType} = methodNode
-
-  let paramsStr = [];
-  for (let i = 0; i < params.length; i++) {
-    let typeStr = ': any';
-    if (paramsType[i]) {
-      typeStr = ': ' + paramsType[i].type;
-    }
-    paramsStr.push(params[i].name + typeStr);
-  }
-
-  return `
-  ${async?'async ':''}${methodNode.funcName}(${paramsStr.join(', ')}):${returnType};
-  `
+  `;
 }
 
 module.exports = {
   classParser,
-  classStr
+  classStr,
 };

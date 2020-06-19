@@ -5,23 +5,23 @@ const paramsTypeFlat = require('./paramsTypeFlat');
  * @param {Object} comment 注释
  */
 function funcComment2FuncInfo(comment) {
-  if(!comment){
+  if (!comment) {
     return {
-      type: "",
+      type: '',
       start: 0,
       end: 0,
-      description: "",
+      description: '',
       params: [],
-      return: 'any'
-    }
+      return: 'any',
+    };
   }
   const funcInfo = {
     type: comment.type,
     start: comment.start,
     end: comment.end,
-    description: "",
+    description: '',
     params: [],
-    return: 'any'
+    return: 'any',
   };
   let annotationLines = comment.value.split('\n');
   annotationLines = annotationLines.splice(1, annotationLines.length - 2);
@@ -31,7 +31,7 @@ function funcComment2FuncInfo(comment) {
       if (!paramsInfo) return;
       const params = {
         name: paramsInfo.groups.name,
-        type: paramsInfo.groups.type
+        type: paramsInfo.groups.type,
       };
       funcInfo.params.push(params);
       return;

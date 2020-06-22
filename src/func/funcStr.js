@@ -1,5 +1,17 @@
-const { generateDescription } = require('../utils');
+const { generateDescription, TYPES } = require('../utils');
 const funcComment2FuncInfo = require('./funcComment2FuncInfo');
+
+function anonymousParamStr(paramNode) {
+  const obj = {};
+
+  const { properties } = paramNode;
+
+  properties.forEach((prop) => {
+    obj[prop.key.name] = 'any';
+  });
+
+  return JSON.stringify(obj).replace(/"/g, '');
+}
 
 /**
  * 方法AST对象转DTS语句
@@ -8,27 +20,34 @@ const funcComment2FuncInfo = require('./funcComment2FuncInfo');
 function functionDeclarationStr(funcNode) {
   if (!funcNode) return '';
   const {
-    params,
+    params = [],
   } = funcNode;
 
   const { params: paramsType, return: returnType } = funcComment2FuncInfo(funcNode.leadingComments ? funcNode.leadingComments[0] : undefined);
 
   const paramsStr = [];
-  for (let i = 0; i < params.length; i += 1) {
+  params.forEach((param, index) => {
     let typeStr = ': any';
-    paramsType.forEach((obj) => {
-      if (obj.name === params[i].name) {
-        typeStr = `: ${obj.type}`;
-      }
-    });
-    let { name } = params[i];
-    // 匿名参数处理
-    if (!name) {
-      name = `props${i}`;
-      typeStr = ': Object';
+    let name = '';
+    switch (param.type) {
+      case TYPES.ObjectPattern:
+        name = `props${index}`;
+        typeStr = `: ${anonymousParamStr(param)}`;
+        paramsStr.push(name + typeStr);
+        break;
+      case TYPES.Identifier:
+        name = param.name;
+        paramsType.forEach((obj) => {
+          if (obj.name === param.name) {
+            typeStr = `: ${obj.type}`;
+          }
+        });
+        paramsStr.push(name + typeStr);
+        break;
+      default:
+        break;
     }
-    paramsStr.push(name + typeStr);
-  }
+  });
 
   return `
 ${generateDescription(funcNode.leadingComments)}

@@ -71,6 +71,7 @@ const TYPES = {
   FunctionDeclaration: 'FunctionDeclaration',
   ExpressionStatement: 'ExpressionStatement',
   ClassDeclaration: 'ClassDeclaration',
+  ObjectPattern: 'ObjectPattern',
 };
 
 module.exports = {

@@ -9,7 +9,7 @@ function object2arr(paramsObj) {
     Object.keys(paramsObj).forEach((att) => {
       const type = {
         name: att,
-        type: JSON.stringify(paramsObj[att]),
+        type: JSON.stringify(paramsObj[att]).replace(/"/g, ''),
       };
       result.push(type);
     });

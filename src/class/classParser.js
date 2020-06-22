@@ -7,16 +7,38 @@ const {
 } = require('../func/funcParse');
 
 /**
+ * 类属性对象字面属性解析{a=1}
+ * @param {Object} node 类属性对象
+ */
+function propertyLiteralParser(node) {
+  if (!node) return {};
+  const result = {
+    type: node.value.type,
+    key: node.key.name,
+    valueType: getType(node.value.value),
+  };
+  return result;
+}
+
+function propertyFunctionParser(node) {
+  if (!node) return {};
+  return node;
+}
+
+/**
  * 类属性对象解析
  * @param {Object} node 类属性对象
  */
 function propertyParser(node) {
   if (!node) return {};
-  const result = {
-    key: node.key.name,
-    type: getType(node.value.value),
-  };
-  return result;
+  switch (node.value.type) {
+    case 'Literal':
+      return propertyLiteralParser(node);
+    case 'ArrowFunctionExpression':
+      return propertyFunctionParser(node);
+    default:
+      return null;
+  }
 }
 
 /**
@@ -102,7 +124,7 @@ function classStr(classParseNode) {
 
   classParseNode.propertys.forEach((property) => {
     propertyStrList.push(
-      `${property.key}:${property.type},`,
+      `${property.key}:${property.valueType},`,
     );
   });
 

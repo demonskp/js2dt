@@ -1,17 +1,33 @@
-/**
- * 数学对象
- */
-class Math {
-  name='aaa';
+const dataPromise = require('./dataPromise');
+const { config } = require('./config');
 
-  /**
-   * 加法
-   * @param {number} a 加数
-   * @param {number} b 加数
-   */
-  async add(a, b) {
-    return a + b;
-  }
+async function isomorphicData({
+  method = 'GET',
+  action,
+  qs,
+  form,
+  restfulParams,
+  json,
+  body,
+  req,
+  headers,
+}) {
+  const data = await dataPromise({
+    method,
+    action,
+    actionDirname: config.actionDirname,
+    transformerDirname: config.transformerDirname,
+    actions: config.requestActions,
+    requestFn: config.requestFn,
+    req,
+    qs,
+    form,
+    restfulParams,
+    json,
+    body,
+    headers,
+  });
+  return data;
 }
 
-module.exports = Math;
+module.exports = isomorphicData;

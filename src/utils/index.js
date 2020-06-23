@@ -72,6 +72,8 @@ const TYPES = {
   ExpressionStatement: 'ExpressionStatement',
   ClassDeclaration: 'ClassDeclaration',
   ObjectPattern: 'ObjectPattern',
+  ObjectExpression: 'ObjectExpression',
+  FunctionExpression: 'FunctionExpression',
 };
 
 /**

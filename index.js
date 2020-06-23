@@ -43,6 +43,6 @@ function transformCode2Ast(code) {
 fs.readFile(path.resolve(__dirname, './test.js'), (err, data) => {
   const ast = transformCode2Ast(data.toString());
   // const classParseNode = classParser(ast.program.body[0]);
-  // console.log(ast.program.body[4].expression.right);
+  // console.log(JSON.stringify(ast.program.body[6]));
   console.log(getDtsString(ast));
 });

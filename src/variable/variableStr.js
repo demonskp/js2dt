@@ -1,5 +1,6 @@
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
 const { getType, generateDescription, TYPES } = require('../utils');
+const { objectStr } = require('../object/objectStr');
 
 function variableFunctionExpressionStr(node, leadingComments) {
   if (!node) return '';
@@ -54,6 +55,9 @@ function variableStr(variableNode) {
         break;
       case TYPES.Literal:
         declArr.push(`declare ${kind} ${variableLiteralStr(node)}`);
+        break;
+      case TYPES.ObjectExpression:
+        declArr.push(objectStr(node.init, node.id.name, variableNode.kind));
         break;
       default:
         break;

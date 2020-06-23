@@ -25,7 +25,7 @@ function deelFunctionParamsType(params, paramsType) {
     let name = '';
     switch (param.type) {
       case TYPES.ObjectPattern:
-        name = `props${index}`;
+        name = `param${index}`;
         typeStr = `: ${anonymousParamStr(param)}`;
         paramsStr.push(name + typeStr);
         break;
@@ -47,6 +47,19 @@ function deelFunctionParamsType(params, paramsType) {
 }
 
 /**
+ * 处理异步状态下的返回类型
+ * @param {Boolean} isAsync 是否异步
+ * @param {String} returnType 返回类型
+ */
+function deelAsyncReturnType(isAsync, returnType) {
+  const isPromise = returnType.includes('Promise');
+  if (isAsync && !isPromise) {
+    return `Promise<${returnType}>`;
+  }
+  return returnType;
+}
+
+/**
  * 方法AST对象转DTS语句
  * @param {Object} funcNode 方法AST对象
  */
@@ -60,10 +73,11 @@ function functionDeclarationStr(funcNode) {
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 
+  const returnTypeReal = deelAsyncReturnType(funcNode.async, returnType);
   return `
 ${generateDescription(funcNode.leadingComments)}
-declare ${funcNode.async ? 'async ' : ''}function ${funcNode.id.name}(${paramsStr.join(', ')}): ${returnType}
+declare function ${funcNode.id.name}(${paramsStr.join(', ')}): ${returnTypeReal}
   `;
 }
 
-module.exports = { functionDeclarationStr, deelFunctionParamsType };
+module.exports = { functionDeclarationStr, deelFunctionParamsType, deelAsyncReturnType };

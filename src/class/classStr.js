@@ -1,6 +1,6 @@
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
 const { getType, generateDescription, TYPES } = require('../utils');
-const { deelFunctionParamsType } = require('../func/funcStr');
+const { deelFunctionParamsType, deelAsyncReturnType } = require('../func/funcStr');
 
 /**
  * 类属性对象方法属性解析
@@ -16,9 +16,11 @@ function propertyFunctionStr(node) {
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 
+  const returnTypeReal = deelAsyncReturnType(node.value.async, returnType);
+
   return `
   ${generateDescription(node.leadingComments)}
-  ${node.value.static ? 'static ' : ''}${node.value.async ? 'async ' : ''}${node.key.name}: (${paramsStr.join(', ')}) => ${returnType};`;
+  ${node.value.static ? 'static ' : ''}${node.key.name}: (${paramsStr.join(', ')}) => ${returnTypeReal};`;
 }
 
 /**

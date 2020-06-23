@@ -2,7 +2,7 @@ const { TYPES, generateDescription, getType } = require('../utils');
 const { expressionStr } = require('../expression/expressionStr');
 const { deepObjectMerge } = require('../utils');
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
-const { deelFunctionParamsType } = require('../func/funcStr');
+const { deelFunctionParamsType, deelAsyncReturnType } = require('../func/funcStr');
 
 /**
  * 命名空间的方法转字符串
@@ -20,9 +20,11 @@ function namespaceFunctionStr(node, name, leadingComments) {
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 
+  const returnTypeReal = deelAsyncReturnType(node.async, returnType);
+
   return `
   ${generateDescription(node.leadingComments)}
-  ${node.async ? 'async ' : ''}function ${name}(${paramsStr.join(', ')}): ${returnType};`;
+  function ${name}(${paramsStr.join(', ')}): ${returnTypeReal};`;
 }
 
 /**

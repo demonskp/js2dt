@@ -1,12 +1,7 @@
 const parser = require('@babel/parser');
 const fs = require('fs');
 const path = require('path');
-const funcComment2FuncInfo = require('./src/func/funcComment2FuncInfo');
-const { propertyLiteralStr, classMethodDefStr, classStr } = require('./src/class/classStr');
-const { functionDeclarationStr } = require('./src/func/funcStr');
-const { variableStr } = require('./src/variable/variableStr');
 const { getDtsString } = require('./src');
-const { namespaceStr } = require('./src/namespace/namespaceStr');
 
 function transformCode2Ast(code) {
   return parser.parse(code, {
@@ -49,5 +44,5 @@ fs.readFile(path.resolve(__dirname, './test.js'), (err, data) => {
   const ast = transformCode2Ast(data.toString());
   // const classParseNode = classParser(ast.program.body[0]);
   // console.log(ast.program.body[4].expression.right);
-  console.log(namespaceStr(ast));
+  console.log(getDtsString(ast));
 });

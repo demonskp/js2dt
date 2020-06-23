@@ -14,17 +14,11 @@ function anonymousParamStr(paramNode) {
 }
 
 /**
- * 方法AST对象转DTS语句
- * @param {Object} funcNode 方法AST对象
+ * 处理方法参数
+ * @param {Array} params AST解析的参数列表
+ * @param {Array} paramsType jsdoc解析的参数类型
  */
-function functionDeclarationStr(funcNode) {
-  if (!funcNode) return '';
-  const {
-    params = [],
-  } = funcNode;
-
-  const { params: paramsType, return: returnType } = funcComment2FuncInfo(funcNode.leadingComments ? funcNode.leadingComments[0] : undefined);
-
+function deelFunctionParamsType(params, paramsType) {
   const paramsStr = [];
   params.forEach((param, index) => {
     let typeStr = ': any';
@@ -49,10 +43,27 @@ function functionDeclarationStr(funcNode) {
     }
   });
 
+  return paramsStr;
+}
+
+/**
+ * 方法AST对象转DTS语句
+ * @param {Object} funcNode 方法AST对象
+ */
+function functionDeclarationStr(funcNode) {
+  if (!funcNode) return '';
+  const {
+    params = [],
+  } = funcNode;
+
+  const { params: paramsType, return: returnType } = funcComment2FuncInfo(funcNode.leadingComments ? funcNode.leadingComments[0] : undefined);
+
+  const paramsStr = deelFunctionParamsType(params, paramsType);
+
   return `
 ${generateDescription(funcNode.leadingComments)}
 declare ${funcNode.async ? 'async ' : ''}function ${funcNode.id.name}(${paramsStr.join(', ')}): ${returnType}
   `;
 }
 
-module.exports = { functionDeclarationStr };
+module.exports = { functionDeclarationStr, deelFunctionParamsType };

@@ -74,9 +74,23 @@ const TYPES = {
   ObjectPattern: 'ObjectPattern',
 };
 
+/**
+ * 深度合并两个对象
+ * @param {Object} FirstOBJ 目标对象
+ * @param {Object} SecondOBJ 被合并对象
+ */
+function deepObjectMerge(FirstOBJ, SecondOBJ) { // 深度合并对象
+  for (const key in SecondOBJ) {
+    FirstOBJ[key] = FirstOBJ[key] && FirstOBJ[key].toString() === '[object Object]'
+      ? deepObjectMerge(FirstOBJ[key], SecondOBJ[key]) : FirstOBJ[key] = SecondOBJ[key];
+  }
+  return FirstOBJ;
+}
+
 module.exports = {
   transformCode2Ast,
   getType,
   generateDescription,
   TYPES,
+  deepObjectMerge,
 };

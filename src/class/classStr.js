@@ -1,5 +1,6 @@
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
 const { getType, generateDescription, TYPES } = require('../utils');
+const { deelFunctionParamsType } = require('../func/funcStr');
 
 /**
  * 类属性对象方法属性解析
@@ -13,16 +14,7 @@ function propertyFunctionStr(node) {
 
   const { params: paramsType, return: returnType } = funcComment2FuncInfo(node.leadingComments ? node.leadingComments[0] : undefined);
 
-  const paramsStr = [];
-  for (let i = 0; i < params.length; i += 1) {
-    let typeStr = ': any';
-    paramsType.forEach((obj) => {
-      if (obj.name === params[i].name) {
-        typeStr = `: ${obj.type}`;
-      }
-    });
-    paramsStr.push(params[i].name + typeStr);
-  }
+  const paramsStr = deelFunctionParamsType(params, paramsType);
 
   return `
   ${generateDescription(node.leadingComments)}

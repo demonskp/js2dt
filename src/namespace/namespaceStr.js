@@ -48,7 +48,7 @@ function namespaceLiteralStr(node, name) {
   if (!node) return '';
 
   return `
-  const ${name}: ${getType(node.value)}`;
+  const ${name}: ${getType(node.value)};`;
 }
 
 /**

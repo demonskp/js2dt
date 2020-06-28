@@ -34,6 +34,27 @@ function variableLiteralStr(node) {
   return `${node.id.name}: ${getType(node.init.value)};`;
 }
 
+function variableCallStr(node, kind) {
+  if (!node) return '';
+  const { id } = node;
+
+  switch (id.type) {
+    case TYPES.Identifier:
+      return `declare ${kind} ${node.id.name}: any;`;
+
+    case TYPES.ObjectPattern:
+      const { properties } = id;
+      const objArr = [];
+      properties.forEach((prop) => {
+        objArr.push(`declare ${kind} ${prop.key.name}: any;`);
+      });
+      return objArr;
+
+    default:
+      break;
+  }
+}
+
 /**
  * 定义AST解析DTS
  * @param {Object} variableNode 定义AST对象
@@ -42,7 +63,7 @@ function variableStr(variableNode) {
   if (!variableNode) return '';
 
   const { kind, declarations, leadingComments } = variableNode;
-  const declArr = [];
+  let declArr = [];
 
   declarations.forEach((node) => {
     if (!node.init) {
@@ -60,7 +81,7 @@ function variableStr(variableNode) {
         declArr.push(objectStr(node.init, node.id.name, variableNode.kind));
         break;
       case TYPES.CallExpression:
-        declArr.push(`declare ${kind} ${node.id.name}: any;`);
+        declArr = declArr.concat(variableCallStr(node, kind));
         break;
       default:
         break;
@@ -69,8 +90,7 @@ function variableStr(variableNode) {
 
   return `
 ${generateDescription(variableNode.leadingComments)}
-${declArr.join('\n')}
-  `;
+${declArr.join('\n')}`;
 }
 
 module.exports = { variableStr };

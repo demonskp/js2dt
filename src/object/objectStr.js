@@ -17,25 +17,10 @@ function typeFunctionStr(node, leadingComments) {
   return `(${paramsStr.join(', ')}) => ${returnTypeReal}`;
 }
 
-/**
- * 定义对象转换
- * @param {Object} node
- * @param {*} name
- * @param {*} kind
- */
-function objectStr(node, name, kind) {
-  if (!node) return '';
-  const map = {};
-  const { properties } = node;
-
-  return `declare ${kind} ${name}: ${objectStrReal(node, name)}`;
-}
-
 function objectStrReal(node, name) {
   if (!node) return '';
   const map = {};
   const { properties } = node;
-
   properties.forEach((property) => {
     switch (property.value.type) {
       case TYPES.FunctionExpression:
@@ -49,10 +34,23 @@ function objectStrReal(node, name) {
         break;
 
       default:
+        map[property.key.name] = 'any';
         break;
     }
   });
   return `${JSON.stringify(map).replace(/"/g, '')}`;
+}
+
+/**
+ * 定义对象转换
+ * @param {Object} node
+ * @param {*} name
+ * @param {*} kind
+ */
+function objectStr(node, name, kind) {
+  if (!node) return '';
+
+  return `declare ${kind} ${name}: ${objectStrReal(node, name)}`;
 }
 
 module.exports = { objectStr };

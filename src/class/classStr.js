@@ -18,6 +18,12 @@ function propertyFunctionStr(node) {
 
   const returnTypeReal = deelAsyncReturnType(node.value.async, returnType);
 
+  if (node.key.name === 'constructor') {
+    return `
+    ${generateDescription(node.leadingComments)}
+    ${node.key.name}(${paramsStr.join(', ')});`;
+  }
+
   return `
   ${generateDescription(node.leadingComments)}
   ${node.value.static ? 'static ' : ''}${node.key.name}: (${paramsStr.join(', ')}) => ${returnTypeReal};`;

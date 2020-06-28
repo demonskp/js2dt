@@ -1,4 +1,5 @@
 const parser = require('@babel/parser');
+const fs = require('fs');
 
 /**
  * 代码转AST树
@@ -90,10 +91,18 @@ function deepObjectMerge(FirstOBJ, SecondOBJ) { // 深度合并对象
   return FirstOBJ;
 }
 
+function saveTSDFile(name, src) {
+  fs.writeFile(`${name}.d.ts`, src, { encoding: 'UTF-8' }, (err) => {
+    if (err) throw Error(`${err.name} ${err.code} ${err.message} ${err.path}`);
+    console.log(`File saved. (${name}.d.ts)`);
+  });
+}
+
 module.exports = {
   transformCode2Ast,
   getType,
   generateDescription,
   TYPES,
   deepObjectMerge,
+  saveTSDFile,
 };

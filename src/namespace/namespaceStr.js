@@ -15,7 +15,6 @@ function namespaceFunctionStr(node, name, leadingComments) {
   const {
     params,
   } = node;
-
   const { params: paramsType, return: returnType } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
@@ -23,8 +22,8 @@ function namespaceFunctionStr(node, name, leadingComments) {
   const returnTypeReal = deelAsyncReturnType(node.async, returnType);
 
   return `
-  ${generateDescription(node.leadingComments)}
-  function ${name}(${paramsStr.join(', ')}): ${returnTypeReal};`;
+${generateDescription(node.leadingComments)}
+ function ${name}(${paramsStr.join(', ')}): ${returnTypeReal};`;
 }
 
 /**
@@ -70,6 +69,7 @@ function namespace2Str(namespaceNode, namespaceName) {
       return;
     }
     switch (node.type) {
+      case TYPES.FunctionExpression:
       case TYPES.ArrowFunctionExpression:
         result.push(namespaceFunctionStr(node, key, node.leadingComments));
         break;
@@ -101,6 +101,7 @@ function namespaceNode2Str(namespaceNode) {
   Object.keys(namespaceNode).forEach((key) => {
     // TODO 暂不处理对外导出
     if (key === 'module') return;
+    if (key === 'exports') return;
     const node = namespaceNode[key];
     // eslint-disable-next-line no-underscore-dangle
     if (!node.__js2dt__not_namespace) { // 是命名空间

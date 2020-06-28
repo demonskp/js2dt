@@ -59,6 +59,9 @@ function variableStr(variableNode) {
       case TYPES.ObjectExpression:
         declArr.push(objectStr(node.init, node.id.name, variableNode.kind));
         break;
+      case TYPES.CallExpression:
+        declArr.push(`declare ${kind} ${node.id.name}: any;`);
+        break;
       default:
         break;
     }

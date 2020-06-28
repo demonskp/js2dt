@@ -27,7 +27,7 @@ function funcComment2FuncInfo(comment) {
   annotationLines = annotationLines.splice(1, annotationLines.length - 2);
   annotationLines.forEach((annotationLine) => {
     if (annotationLine.search('\\* @param') >= 0) {
-      const paramsInfo = (/\@param {(?<type>.+)} (?<name>.+) /g).exec(annotationLine);
+      const paramsInfo = (/\@param {(?<type>.+)} (?<name>\S+)/g).exec(annotationLine);
       if (!paramsInfo) return;
       const params = {
         name: paramsInfo.groups.name,

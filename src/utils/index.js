@@ -74,6 +74,7 @@ const TYPES = {
   ObjectPattern: 'ObjectPattern',
   ObjectExpression: 'ObjectExpression',
   FunctionExpression: 'FunctionExpression',
+  CallExpression: 'CallExpression',
 };
 
 /**

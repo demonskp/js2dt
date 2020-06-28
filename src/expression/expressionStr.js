@@ -6,8 +6,10 @@ function expressionStr(expressionNode) {
   let propFlag = true;
   let target = left;
   while (propFlag) {
-    list.push(target.property.name);
-    target = target.object;
+    if (target.property) {
+      list.push(target.property.name);
+      target = target.object;
+    }
 
     if (!target.property) {
       propFlag = false;

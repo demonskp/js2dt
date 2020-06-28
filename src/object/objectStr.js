@@ -1,4 +1,4 @@
-const { TYPES } = require('../utils');
+const { TYPES, getType } = require('../utils');
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
 const { deelFunctionParamsType, deelAsyncReturnType } = require('../func/funcStr');
 
@@ -18,12 +18,20 @@ function typeFunctionStr(node, leadingComments) {
 }
 
 /**
- *
+ * 定义对象转换
  * @param {Object} node
  * @param {*} name
  * @param {*} kind
  */
 function objectStr(node, name, kind) {
+  if (!node) return '';
+  const map = {};
+  const { properties } = node;
+
+  return `declare ${kind} ${name}: ${objectStrReal(node, name)}`;
+}
+
+function objectStrReal(node, name) {
   if (!node) return '';
   const map = {};
   const { properties } = node;
@@ -34,15 +42,17 @@ function objectStr(node, name, kind) {
         map[property.key.name] = typeFunctionStr(property.value, property.leadingComments);
         break;
       case TYPES.Literal:
-        // TODO {yzy}
-        // map[property.key.name] = typeFunctionStr(property.value, property.leadingComments);
+        map[property.key.name] = getType(property.value.value);
+        break;
+      case TYPES.ObjectExpression:
+        map[property.key.name] = objectStrReal(property.value, name);
         break;
 
       default:
         break;
     }
   });
-  return `declare ${kind} ${name}: ${JSON.stringify(map).replace(/"/g, '')}`;
+  return `${JSON.stringify(map).replace(/"/g, '')}`;
 }
 
 module.exports = { objectStr };

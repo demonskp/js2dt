@@ -83,6 +83,9 @@ function variableStr(variableNode) {
       case TYPES.CallExpression:
         declArr = declArr.concat(variableCallStr(node, kind));
         break;
+      case TYPES.Identifier:
+        declArr.push(`declare ${kind} ${node.id.name}: any;`);
+        break;
       default:
         break;
     }

@@ -7,7 +7,8 @@ const { transformCode2Ast, saveTSDFile } = require('../src/utils');
 const { getDtsString } = require('../src');
 
 const srcFiles = function (val) {
-  return val.split(',');
+  console.log(val);
+  return val.split(' ');
 };
 
 program
@@ -27,11 +28,11 @@ function getDirNodeModules(callBack) {
   });
 }
 
-function exec(rootPath) {
-  const readPath = path.resolve(rootPath, '../', program.src[0]);
+function exec(rootPath, src) {
+  const readPath = path.resolve(rootPath, '../', src);
   fs.readFile(readPath, (err, data) => {
     if (err) {
-      console.error('[d2t]can not read this');
+      console.error(`[d2t]can not read this:${readPath}`);
       throw err;
     }
     const ast = transformCode2Ast(data.toString());
@@ -44,5 +45,7 @@ function exec(rootPath) {
 
 getDirNodeModules((rootPath) => {
   console.log(`js2dt:${myPackage.version}`);
-  exec(rootPath);
+  program.src.forEach((value) => {
+    exec(rootPath, value.trim());
+  });
 });

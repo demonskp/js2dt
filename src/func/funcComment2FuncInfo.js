@@ -36,8 +36,8 @@ function funcComment2FuncInfo(comment) {
       funcInfo.params.push(params);
       return;
     }
-    if (annotationLine.search('\\* @returns') >= 0) {
-      const returnInfo = (/\@returns {(?<return>.+)}.*/).exec(annotationLine);
+    if (annotationLine.search('\\* @return') >= 0) {
+      const returnInfo = (/\@(returns|return) {(?<return>.+)}.*/).exec(annotationLine);
       if (!returnInfo) return;
       funcInfo.return = returnInfo.groups.return;
       return;

@@ -1,18 +1,21 @@
 {
   "name": "js2dt",
   "version": "0.0.01",
-  "description": "",
+  "description": "a lib for js generate d.ts with jsdoc",
   "main": "index.js",
   "bin": {
     "js2dt": "bin/js2dt"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js",
     "lint": "eslint src/**"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["JavaScript", "TypeScript", "d.ts", "jsdoc"],
+  "author": "demonskp",
   "license": "ISC",
   "dependencies": {
     "@babel/parser": "^7.10.2",

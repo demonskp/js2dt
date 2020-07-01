@@ -86,6 +86,12 @@ function variableStr(variableNode) {
       case TYPES.Identifier:
         declArr.push(`declare ${kind} ${node.id.name}: any;`);
         break;
+      case TYPES.UnaryExpression:
+        declArr.push(`declare ${kind} ${node.id.name}: Number;`);
+        break;
+      case TYPES.BinaryExpression:
+        declArr.push(`declare ${kind} ${node.id.name}: any;`);
+        break;
       default:
         break;
     }

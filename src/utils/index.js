@@ -71,6 +71,8 @@ const TYPES = {
   ObjectExpression: 'ObjectExpression',
   FunctionExpression: 'FunctionExpression',
   CallExpression: 'CallExpression',
+  UnaryExpression: 'UnaryExpression',
+  BinaryExpression: 'BinaryExpression',
 };
 
 /**

@@ -1,1 +1,1 @@
-const configGetGlobalHeaders = () => ({});
+const c = add();

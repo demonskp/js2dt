@@ -1,3 +1,3 @@
 
 
-declare const configGetGlobalHeaders =  () => any;
+declare const c: any;

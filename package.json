@@ -20,7 +20,7 @@
   "dependencies": {
     "@babel/parser": "^7.10.2",
     "@types/node": "^14.0.13",
-    "commander": "^5.1.0",
+    "commander": "^5.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

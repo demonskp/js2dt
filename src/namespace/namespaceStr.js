@@ -63,7 +63,7 @@ function exportFunctionStr(node, name, leadingComments) {
 
   return `
 ${generateDescription(node.leadingComments)}
- export default function ${name || ''}(${paramsStr.join(', ')}): ${returnTypeReal};`;
+export default function ${name || ''}(${paramsStr.join(', ')}): ${returnTypeReal};`;
 }
 
 /**
@@ -136,7 +136,7 @@ function exportStr(node) {
   let result = '';
   switch (node.type) {
     case TYPES.FunctionExpression:
-      result = exportFunctionStr(node);
+      result = exportFunctionStr(node, node.id.name);
       break;
     case TYPES.ObjectExpression:
       result = `export default ${objectStrReal(node).replace(/:any/g, '')}`;

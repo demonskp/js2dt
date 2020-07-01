@@ -21,7 +21,7 @@ function variableFunctionExpressionStr(node, leadingComments) {
     paramsStr.push(params[i].name + typeStr);
   }
 
-  return `${node.id.name} = ${node.init.async ? 'async ' : ''} (${paramsStr.join(', ')}) => ${returnType};`;
+  return `${node.id.name} : (${paramsStr.join(', ')}) => ${returnType};`;
 }
 
 /**

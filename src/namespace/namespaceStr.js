@@ -1,8 +1,20 @@
-const { TYPES, generateDescription, getType } = require('../utils');
-const { expressionStr } = require('../expression/expressionStr');
-const { deepObjectMerge } = require('../utils');
+const {
+  TYPES,
+  generateDescription,
+  getType,
+} = require('../utils');
+const {
+  expressionStr,
+} = require('../expression/expressionStr');
+const {
+  deepObjectMerge,
+} = require('../utils');
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
-const { deelFunctionParamsType, deelAsyncReturnType } = require('../func/funcStr');
+const {
+  deelFunctionParamsType,
+  deelAsyncReturnType,
+} = require('../func/funcStr');
+const { objectStrReal } = require('../object/objectStr');
 
 /**
  * 命名空间的方法转字符串
@@ -15,7 +27,10 @@ function namespaceFunctionStr(node, name, leadingComments) {
   const {
     params,
   } = node;
-  const { params: paramsType, return: returnType } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
+  const {
+    params: paramsType,
+    return: returnType,
+  } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 
@@ -24,6 +39,31 @@ function namespaceFunctionStr(node, name, leadingComments) {
   return `
 ${generateDescription(node.leadingComments)}
  function ${name}(${paramsStr.join(', ')}): ${returnTypeReal};`;
+}
+
+/**
+ * 导出语句的方法转字符串
+ * @param {Object} node 命名空间对象
+ * @param {String} name 方法名
+ * @param {Array} leadingComments 注释
+ */
+function exportFunctionStr(node, name, leadingComments) {
+  if (!node) return '';
+  const {
+    params,
+  } = node;
+  const {
+    params: paramsType,
+    return: returnType,
+  } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
+
+  const paramsStr = deelFunctionParamsType(params, paramsType);
+
+  const returnTypeReal = deelAsyncReturnType(node.async, returnType);
+
+  return `
+${generateDescription(node.leadingComments)}
+ export default function ${name || ''}(${paramsStr.join(', ')}): ${returnTypeReal};`;
 }
 
 /**
@@ -60,8 +100,6 @@ function namespace2Str(namespaceNode, namespaceName) {
 
   const result = [];
   Object.keys(namespaceNode).forEach((key) => {
-    // TODO 暂不处理对外导出
-    if (key === 'module') return;
     const node = namespaceNode[key];
     // eslint-disable-next-line no-underscore-dangle
     if (!node.__js2dt__not_namespace) { // 是命名空间
@@ -91,16 +129,42 @@ function namespace2Str(namespaceNode, namespaceName) {
 }
 
 /**
+ * 导出语句
+ * @param {Object} node
+ */
+function exportStr(node) {
+  let result = '';
+  switch (node.type) {
+    case TYPES.FunctionExpression:
+      result = exportFunctionStr(node);
+      break;
+    case TYPES.ObjectExpression:
+      result = `export default ${objectStrReal(node).replace(/:any/g, '')}`;
+      break;
+    case TYPES.Identifier:
+      result = `export default ${node.name};`;
+      break;
+    default:
+      break;
+  }
+  return result;
+}
+
+/**
  * 命名空间对象转字符串
  * @param {Object} namespaceNode 命名空间对象
  */
 function namespaceNode2Str(namespaceNode) {
   if (!namespaceNode) return '';
 
-  const result = [];
+  let result = [];
+  const exportList = [];
   Object.keys(namespaceNode).forEach((key) => {
     // TODO 暂不处理对外导出
-    if (key === 'module') return;
+    if (key === 'module') {
+      exportList.push(exportStr(namespaceNode[key].exports));
+      return;
+    }
     if (key === 'exports') return;
     const node = namespaceNode[key];
     // eslint-disable-next-line no-underscore-dangle
@@ -108,7 +172,7 @@ function namespaceNode2Str(namespaceNode) {
       result.push(`declare ${namespace2Str(node, key)}`);
     }
   });
-
+  result = result.concat(exportList);
   return `${result.join('\n')}`;
 }
 
@@ -117,7 +181,9 @@ function namespaceNode2Str(namespaceNode) {
  * @param {Object} ast AST对象
  */
 function namespaceParse(ast) {
-  const { body } = ast.program;
+  const {
+    body,
+  } = ast.program;
   const expressList = body.filter((node) => node.type === TYPES.ExpressionStatement);
   const namespace = {};
   expressList.forEach((node) => {
@@ -134,4 +200,6 @@ function namespaceStr(ast) {
   return result;
 }
 
-module.exports = { namespaceStr };
+module.exports = {
+  namespaceStr,
+};

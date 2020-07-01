@@ -17,7 +17,7 @@ function typeFunctionStr(node, leadingComments) {
   return `(${paramsStr.join(', ')}) => ${returnTypeReal}`;
 }
 
-function objectStrReal(node, name) {
+function objectStrReal(node) {
   if (!node) return '';
   const map = {};
   const { properties } = node;
@@ -30,7 +30,7 @@ function objectStrReal(node, name) {
         map[property.key.name] = getType(property.value.value);
         break;
       case TYPES.ObjectExpression:
-        map[property.key.name] = objectStrReal(property.value, name);
+        map[property.key.name] = objectStrReal(property.value);
         break;
 
       default:
@@ -50,7 +50,7 @@ function objectStrReal(node, name) {
 function objectStr(node, name, kind) {
   if (!node) return '';
 
-  return `declare ${kind} ${name}: ${objectStrReal(node, name)}`;
+  return `declare ${kind} ${name}: ${objectStrReal(node)}`;
 }
 
-module.exports = { objectStr };
+module.exports = { objectStr, objectStrReal };

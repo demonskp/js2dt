@@ -1,6 +1,28 @@
 const paramsTypeFlat = require('./paramsTypeFlat');
 
 /**
+ * 转换jsdoc类型写法
+ * @param {String} type 类型
+ */
+function typeTranslate(type) {
+  let result = type;
+  switch (type) {
+    case '':
+      result = 'any';
+      break;
+    case '*':
+      result = 'any';
+      break;
+    case '{}':
+      result = 'Object';
+      break;
+    default:
+      break;
+  }
+  return result;
+}
+
+/**
  * 方法注释转方法类型描述
  * @param {Object} comment 注释
  */
@@ -46,7 +68,10 @@ function funcComment2FuncInfo(comment) {
     if (!funcDesc) return;
     funcInfo.description = funcDesc.groups.desc;
   });
-  funcInfo.params = paramsTypeFlat(funcInfo.params);
+  funcInfo.params = paramsTypeFlat(funcInfo.params).map((param) => ({
+    name: param.name,
+    type: typeTranslate(param.type),
+  }));
   return funcInfo;
 }
 

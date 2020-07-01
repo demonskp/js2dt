@@ -1,9 +1,24 @@
 
 /**
- * 方法注释转方法类型描述
- * @param {Object} comment 注释
- * @param {String} comment.type 类型
+ * 数学对象
  */
-declare function funcComment2FuncInfo(comment: {type:String}): any
+declare class Math{
   
-export default funcComment2FuncInfo;
+  name: string;
+
+  /**
+   * 减法
+   * @param {number} a 被减数
+   * @param {number} b 减数
+   */
+  reduce: (a: number, b: number) => any;
+
+  /**
+   * 加法
+   * @param {number} a 加数
+   * @param {number} b 加数
+   */
+  add: (a: number, b: number) => Promise<any>;
+
+}
+export default Math;

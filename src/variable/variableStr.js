@@ -8,7 +8,7 @@ function variableFunctionExpressionStr(node, leadingComments) {
     params,
   } = node.init;
 
-  const { params: paramsType, return: returnType } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
+  const { params: paramsType, return: returnType } = funcComment2FuncInfo(leadingComments ? leadingComments[leadingComments.length - 1] : undefined);
 
   const paramsStr = [];
   for (let i = 0; i < params.length; i += 1) {

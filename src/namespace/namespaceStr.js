@@ -30,7 +30,7 @@ function namespaceFunctionStr(node, name, leadingComments) {
   const {
     params: paramsType,
     return: returnType,
-  } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
+  } = funcComment2FuncInfo(leadingComments ? leadingComments[leadingComments.length - 1] : undefined);
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 
@@ -55,7 +55,7 @@ function exportFunctionStr(node, name, leadingComments) {
   const {
     params: paramsType,
     return: returnType,
-  } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
+  } = funcComment2FuncInfo(leadingComments ? leadingComments[leadingComments.length - 1] : undefined);
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 
@@ -136,7 +136,7 @@ function exportStr(node) {
   let result = '';
   switch (node.type) {
     case TYPES.FunctionExpression:
-      result = exportFunctionStr(node, node.id.name);
+      result = exportFunctionStr(node, node.id ? node.id.name : null, node.leadingComments);
       break;
     case TYPES.ObjectExpression:
       result = `export default ${objectStrReal(node).replace(/:any/g, '')}`;
@@ -160,7 +160,6 @@ function namespaceNode2Str(namespaceNode) {
   let result = [];
   const exportList = [];
   Object.keys(namespaceNode).forEach((key) => {
-    // TODO 暂不处理对外导出
     if (key === 'module') {
       exportList.push(exportStr(namespaceNode[key].exports));
       return;

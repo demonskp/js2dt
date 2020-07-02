@@ -50,11 +50,11 @@ function getType(obj) {
 
 function generateDescription(leadingComments) {
   if (!leadingComments) return '';
-  const commentlines = leadingComments[0].value.split('\n');
+  const commentlines = leadingComments[leadingComments.length - 1].value.split('\n');
   if (commentlines.length > 1) {
-    return `/*${leadingComments[0].value}*/`;
+    return `/*${leadingComments[leadingComments.length - 1].value}*/`;
   }
-  return `//${leadingComments[0].value}`;
+  return `//${leadingComments[leadingComments.length - 1].value}`;
 }
 
 const TYPES = {

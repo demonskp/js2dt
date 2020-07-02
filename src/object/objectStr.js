@@ -8,7 +8,7 @@ function typeFunctionStr(node, leadingComments) {
     params = [],
   } = node;
 
-  const { params: paramsType, return: returnType } = funcComment2FuncInfo(leadingComments ? leadingComments[0] : undefined);
+  const { params: paramsType, return: returnType } = funcComment2FuncInfo(leadingComments ? leadingComments[leadingComments.length - 1] : undefined);
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 

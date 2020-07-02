@@ -69,7 +69,7 @@ function functionDeclarationStr(funcNode) {
     params = [],
   } = funcNode;
 
-  const { params: paramsType, return: returnType } = funcComment2FuncInfo(funcNode.leadingComments ? funcNode.leadingComments[0] : undefined);
+  const { params: paramsType, return: returnType } = funcComment2FuncInfo(funcNode.leadingComments ? funcNode.leadingComments[funcNode.leadingComments.length - 1] : undefined);
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 

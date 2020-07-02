@@ -12,7 +12,7 @@ function propertyFunctionStr(node) {
     params,
   } = node.value;
 
-  const { params: paramsType, return: returnType } = funcComment2FuncInfo(node.leadingComments ? node.leadingComments[0] : undefined);
+  const { params: paramsType, return: returnType } = funcComment2FuncInfo(node.leadingComments ? node.leadingComments[node.leadingComments.length - 1] : undefined);
 
   const paramsStr = deelFunctionParamsType(params, paramsType);
 

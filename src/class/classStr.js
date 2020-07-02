@@ -20,8 +20,8 @@ function propertyFunctionStr(node) {
 
   if (node.key.name === 'constructor') {
     return `
-    ${generateDescription(node.leadingComments)}
-    ${node.key.name}(${paramsStr.join(', ')});`;
+  ${generateDescription(node.leadingComments)}
+  ${node.key.name}(${paramsStr.join(', ')});`;
   }
 
   return `
@@ -72,7 +72,6 @@ function classStr(classNode) {
   if (!classNode) return '';
 
   const propertyList = [];
-
   classNode.body.body.forEach((node) => {
     switch (node.type) {
       case TYPES.MethodDefinition:
@@ -87,9 +86,14 @@ function classStr(classNode) {
     }
   });
 
+  let superClass = '';
+  if (classNode.superClass) {
+    superClass = ` extends ${classNode.superClass.name}`;
+  }
+
   return `
 ${generateDescription(classNode.leadingComments)}
-declare class ${classNode.id.name}{
+declare class ${classNode.id.name}${superClass} {
   ${propertyList.join('\n')}
 
 }`;

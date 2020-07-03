@@ -139,7 +139,7 @@ function exportStr(node) {
       result = exportFunctionStr(node, node.id ? node.id.name : null, node.leadingComments);
       break;
     case TYPES.ObjectExpression:
-      result = `export default ${objectStrReal(node).replace(/:any/g, '')}`;
+      result = `export ${objectStrReal(node).replace(/:any/g, '')}`;
       break;
     case TYPES.Identifier:
       result = `export default ${node.name};`;

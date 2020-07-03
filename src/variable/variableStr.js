@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
 const { getType, generateDescription, TYPES } = require('../utils');
 const { objectStr } = require('../object/objectStr');
@@ -36,21 +37,31 @@ function variableLiteralStr(node) {
   return `${node.id.name}: ${getType(node.init.value)};`;
 }
 
+function requiredPathSave(router) {
+  const { rootPath } = config;
+  if (/^[\.\/|\.\.\/]/.test(router)) {
+    let src = path.resolve(rootPath, router);
+    if (fs.existsSync(`${src}.js`)) {
+      src += '.js';
+    } else if (fs.existsSync(path.resolve(src, './index.js'))) {
+      src = path.resolve(src, './index.js');
+    }
+    config.scanMap[src] = [];
+  }
+}
+
 function variableCallStr(node, kind) {
   if (!node) return '';
   const { id } = node;
 
-  const { deep, rootPath } = config;
+  const { deep } = config;
+  if (deep && node.init.callee.name === 'require') {
+    const router = node.init.arguments[0].value;
+    requiredPathSave(router);
+  }
+
   switch (id.type) {
     case TYPES.Identifier:
-      if (deep && node.init.callee.name === 'require') {
-        const router = node.init.arguments[0].value;
-        if (/^[\.\/|\.\.\/]/.test(router)) {
-          let src = path.resolve(rootPath, router);
-          src = /.js$/.test(src) ? src : `${src}.js`;
-          config.scanMap[src] = [];
-        }
-      }
       return `declare ${kind} ${node.id.name}: any;`;
 
     case TYPES.ObjectPattern:

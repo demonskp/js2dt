@@ -6,7 +6,6 @@ const { js2dtFromFile } = require('../src');
 const config = require('../src/config/config');
 
 const srcFiles = function (val) {
-  console.log(val);
   return val.split(' ');
 };
 
@@ -17,12 +16,12 @@ program
   .parse(process.argv);
 
 if (!program.src) {
-  console.warn('--src option is MUST.');
+  console.warn('[warn]', '--src option is MUST.');
   program.help();
 }
 
 if (program.deep) {
-  console.log('Deep mode start');
+  console.log('[info]', 'Deep mode start');
   config.deep = true;
 }
 
@@ -45,7 +44,7 @@ function execut(srcList) {
     config.rootPath = dirList.join('\\');
     js2dtFromFile(src);
     allList.push(src);
-    deepList = Object.keys(config.scanMap);
+    deepList = deepList.concat(Object.keys(config.scanMap));
     config.scanMap = {};
   });
   if (deepList.length) {
@@ -54,7 +53,7 @@ function execut(srcList) {
 }
 
 getDirNodeModules((rootPath) => {
-  console.log(`js2dt:${myPackage.version}`);
+  console.log('[info]', `js2dt:${myPackage.version}`);
   config.rootPath = path.resolve(rootPath, '../');
   const srcList = [];
   program.src.forEach((value) => {

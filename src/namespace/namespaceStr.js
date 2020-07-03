@@ -132,7 +132,7 @@ function namespace2Str(namespaceNode, namespaceName) {
  * 导出语句
  * @param {Object} node
  */
-function exportStr(node) {
+function moduleExportStr(node) {
   let result = '';
   switch (node.type) {
     case TYPES.FunctionExpression:
@@ -151,6 +151,31 @@ function exportStr(node) {
 }
 
 /**
+ * export导出对象
+ * @param {Object} node exports导出的对象
+ */
+function exportStr(node) {
+  const resultList = [];
+  Object.keys(node).forEach((key) => {
+    const value = node[key];
+    switch (value.type) {
+      case TYPES.Identifier:
+        if (key === value.name) {
+          resultList.push(key);
+        } else {
+          resultList.push(`${value.name} as ${key}`);
+        }
+        break;
+
+      default:
+        break;
+    }
+  });
+
+  return `export { ${resultList.join(', ')} }`;
+}
+
+/**
  * 命名空间对象转字符串
  * @param {Object} namespaceNode 命名空间对象
  */
@@ -160,12 +185,20 @@ function namespaceNode2Str(namespaceNode) {
   let result = [];
   const exportList = [];
   Object.keys(namespaceNode).forEach((key) => {
+    const node = namespaceNode[key];
     if (key === 'module') {
-      exportList.push(exportStr(namespaceNode[key].exports));
+      exportList.push(moduleExportStr(node.exports));
       return;
     }
-    if (key === 'exports') return;
-    const node = namespaceNode[key];
+    if (key === 'exports') {
+      if (!exportList.length) {
+        exportList.push(exportStr(node));
+      } else {
+        //
+      }
+
+      return;
+    }
     // eslint-disable-next-line no-underscore-dangle
     if (!node.__js2dt__not_namespace) { // 是命名空间
       result.push(`declare ${namespace2Str(node, key)}`);

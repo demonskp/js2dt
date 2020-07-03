@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const { TYPES } = require('./utils');
 const { transformCode2Ast, saveTSDFile } = require('./utils');
 const { variableStr } = require('./variable/variableStr');

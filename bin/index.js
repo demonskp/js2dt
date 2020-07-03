@@ -52,8 +52,12 @@ function execut(srcList) {
     try {
       js2dtFromFile(src);
     } catch (error) {
-      console.error(error.message);
       errList.push(src);
+      if (error.code > 10000) {
+        console.error(error.message);
+      } else {
+        console.error(error);
+      }
     }
 
     allList.push(src);

@@ -78,6 +78,8 @@ const TYPES = {
   CallExpression: 'CallExpression',
   UnaryExpression: 'UnaryExpression',
   BinaryExpression: 'BinaryExpression',
+  ImportDeclaration: 'ImportDeclaration',
+  ExportDefaultDeclaration: 'ExportDefaultDeclaration',
 };
 
 /**
@@ -115,7 +117,9 @@ function saveTSDFile(name, data) {
     if (error.code > 10000) {
       throw error;
     } else {
-      throw new Error(`[error] save file [${name}.d.ts] failure!`);
+      const err = new Error(`[error] save file [${name}.d.ts] failure!`);
+      err.code = 10002;
+      throw err;
     }
   }
 }

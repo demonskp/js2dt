@@ -1,5 +1,6 @@
 const parser = require('@babel/parser');
 const fs = require('fs');
+const config = require('../config/config');
 
 /**
  * 代码转AST树
@@ -98,10 +99,25 @@ function deepObjectMerge(FirstOBJ, SecondOBJ) { // 深度合并对象
  * @param {String} data 数据
  */
 function saveTSDFile(name, data) {
-  fs.writeFile(`${name}.d.ts`, data, { encoding: 'UTF-8' }, (err) => {
-    if (err) throw Error(`${err.name} ${err.code} ${err.message} ${err.path}`);
-    console.log(`File saved. (${name}.d.ts)`);
-  });
+  try {
+    if (config.overwrite) {
+      console.log('[info]', `File saved. (${name}.d.ts)`);
+      fs.writeFileSync(`${name}.d.ts`, data);
+    } else if (!fs.existsSync(`${name}.d.ts`)) {
+      console.log(`File saved. (${name}.d.ts)`);
+      fs.writeFileSync(`${name}.d.ts`, data);
+    } else {
+      const err = new Error(`[warn] [${name}.d.ts] is exists!`);
+      err.code = 10001;
+      throw err;
+    }
+  } catch (error) {
+    if (error.code > 10000) {
+      throw error;
+    } else {
+      throw new Error(`[error] save file [${name}.d.ts] failure!`);
+    }
+  }
 }
 
 module.exports = {

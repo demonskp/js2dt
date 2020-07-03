@@ -13,6 +13,7 @@ program
   .version(myPackage.version, '-v, --version')
   .option('-s, --src <path>', '[MUST] target javascript file path', srcFiles)
   .option('--deep', 'Whether to include the file referenced by the request')
+  .option('-o, --overwrite', 'Overwrite existing files')
   .parse(process.argv);
 
 if (!program.src) {
@@ -25,6 +26,11 @@ if (program.deep) {
   config.deep = true;
 }
 
+if (program.overwrite) {
+  console.log('[info]', 'overwrite mode start');
+  config.overwrite = true;
+}
+
 function getDirNodeModules(callBack) {
   child_process.exec('npm root', { encoding: 'utf8', maxBuffer: 2048 }, (e, stdout, stderr) => {
     // if(e)throw e;
@@ -32,6 +38,7 @@ function getDirNodeModules(callBack) {
   });
 }
 const allList = [];
+const errList = [];
 
 function execut(srcList) {
   let deepList = [];
@@ -42,7 +49,13 @@ function execut(srcList) {
     const dirList = src.split('\\');
     dirList.pop();
     config.rootPath = dirList.join('\\');
-    js2dtFromFile(src);
+    try {
+      js2dtFromFile(src);
+    } catch (error) {
+      console.error(error.message);
+      errList.push(src);
+    }
+
     allList.push(src);
     deepList = deepList.concat(Object.keys(config.scanMap));
     config.scanMap = {};
@@ -61,4 +74,5 @@ getDirNodeModules((rootPath) => {
     srcList.push(src);
   });
   execut(srcList);
+  console.log('[info]', `Find file ${allList.length} fail ${errList.length}`);
 });

@@ -4,3 +4,5 @@ dist
 .idea
 .vscode
 .npmrc
+*.d.ts
+test.js

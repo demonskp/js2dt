@@ -1,6 +1,8 @@
+const path = require('path');
 const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
 const { getType, generateDescription, TYPES } = require('../utils');
 const { objectStr } = require('../object/objectStr');
+const config = require('../config/config');
 
 function variableFunctionExpressionStr(node, leadingComments) {
   if (!node) return '';
@@ -38,8 +40,17 @@ function variableCallStr(node, kind) {
   if (!node) return '';
   const { id } = node;
 
+  const { deep, rootPath } = config;
   switch (id.type) {
     case TYPES.Identifier:
+      if (deep && node.init.callee.name === 'require') {
+        const router = node.init.arguments[0].value;
+        if (/^[\.\/|\.\.\/]/.test(router)) {
+          let src = path.resolve(rootPath, router);
+          src = /.js$/.test(src) ? src : `${src}.js`;
+          config.scanMap[src] = [];
+        }
+      }
       return `declare ${kind} ${node.id.name}: any;`;
 
     case TYPES.ObjectPattern:
@@ -53,6 +64,7 @@ function variableCallStr(node, kind) {
     default:
       break;
   }
+  return '';
 }
 
 /**

@@ -37,6 +37,10 @@ function transformCode2Ast(code) {
   });
 }
 
+/**
+ * 获取对象类型
+ * @param {*} obj 对象
+ */
 function getType(obj) {
   if (Array.isArray(obj)) {
     return 'Array';
@@ -88,8 +92,13 @@ function deepObjectMerge(FirstOBJ, SecondOBJ) { // 深度合并对象
   return FirstOBJ;
 }
 
-function saveTSDFile(name, src) {
-  fs.writeFile(`${name}.d.ts`, src, { encoding: 'UTF-8' }, (err) => {
+/**
+ * 将数据保存成d.ts文件
+ * @param {String} name 文件名包含路径
+ * @param {String} data 数据
+ */
+function saveTSDFile(name, data) {
+  fs.writeFile(`${name}.d.ts`, data, { encoding: 'UTF-8' }, (err) => {
     if (err) throw Error(`${err.name} ${err.code} ${err.message} ${err.path}`);
     console.log(`File saved. (${name}.d.ts)`);
   });

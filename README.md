@@ -1,6 +1,6 @@
 # js2dt
 
-[github](https://github.com/demonskp/js2dt)|[npm](https://www.npmjs.com/package/js2dt)
+[github](https://github.com/demonskp/js2dt)  |  [npm](https://www.npmjs.com/package/js2dt)
 
 通过AST语法树和jsdoc注释解析将JavaScript代码转换成对应的Typescript的Type文件，也就是.js转.d.ts文件。由于js和ts的语法区别，并不保证可以完美转换。
 
@@ -47,6 +47,8 @@ js2dt --src ./test.js,./index.js
 配置项|简写|作用|备注
 ---|---|---|---
 --src [path]|-s|生成指定path路径的js文件的类型文件|-
+--deep | \ | 对文件应用的文件也生成类型文件 | 会排除引用的库
+--overwrite| -o | 生成时覆盖已存在的类型文件 | -
 
 ## 注意项：
 
@@ -58,7 +60,7 @@ js2dt --src ./test.js,./index.js
 ## 更新计划
 
 1. 对导出语句增加支持 √
-2. 对相对路径导入语句增加支持
+2. 对相对路径导入语句增加支持 √
 3. 增加类型推断能力，不完全依赖于jsdoc
 
 ## 无法解析的语法

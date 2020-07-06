@@ -10,6 +10,8 @@ function transformCode2Ast(code) {
   return parser.parse(code, {
     sourceType: 'module',
     plugins: [
+      'jsx',
+      'typescript',
       'asyncGenerators',
       'bigInt',
       'classProperties',

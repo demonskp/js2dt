@@ -80,6 +80,7 @@ const TYPES = {
   BinaryExpression: 'BinaryExpression',
   ImportDeclaration: 'ImportDeclaration',
   ExportDefaultDeclaration: 'ExportDefaultDeclaration',
+  ExportNamedDeclaration: 'ExportNamedDeclaration',
 };
 
 /**

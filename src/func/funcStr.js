@@ -62,8 +62,10 @@ function deelAsyncReturnType(isAsync, returnType) {
 /**
  * 方法AST对象转DTS语句
  * @param {Object} funcNode 方法AST对象
+ * @param {Boolean} isExport 是否es6导出
+ * @param {Boolean} isDefault 是否es6默认导出
  */
-function functionDeclarationStr(funcNode) {
+function functionDeclarationStr(funcNode, isExport, isDefault) {
   if (!funcNode) return '';
   const {
     params = [],
@@ -74,9 +76,17 @@ function functionDeclarationStr(funcNode) {
   const paramsStr = deelFunctionParamsType(params, paramsType);
 
   const returnTypeReal = deelAsyncReturnType(funcNode.async, returnType);
+
+  let exportDefaultDeclare = 'declare';
+  if (isExport) {
+    exportDefaultDeclare = 'export';
+    if (isDefault) {
+      exportDefaultDeclare = 'export default';
+    }
+  }
   return `
 ${generateDescription(funcNode.leadingComments)}
-declare function ${funcNode.id.name}(${paramsStr.join(', ')}): ${returnTypeReal}
+${exportDefaultDeclare} function ${funcNode.id ? funcNode.id.name : ''}(${paramsStr.join(', ')}): ${returnTypeReal}
   `;
 }
 

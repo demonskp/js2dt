@@ -6,6 +6,7 @@ const { classStr } = require('./class/classStr');
 const { functionDeclarationStr } = require('./func/funcStr');
 const { namespaceStr } = require('./namespace/namespaceStr');
 const { importStr } = require('./import/importStr');
+const { exportStr } = require('./exportES6/export');
 
 function getDtsString(ast) {
   const { body } = ast.program;
@@ -25,11 +26,13 @@ function getDtsString(ast) {
         // TODO 暂时不处理
         break;
       case TYPES.ImportDeclaration:
-        // TODO ES6导入
         result.push(importStr(node));
         break;
       case TYPES.ExportDefaultDeclaration:
-        // TODO ES6导出
+        result.push(exportStr(node, true));
+        break;
+      case TYPES.ExportNamedDeclaration:
+        result.push(exportStr(node, false));
         break;
       default:
         break;

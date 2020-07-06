@@ -68,7 +68,7 @@ function propertyStr(node) {
   return result;
 }
 
-function classStr(classNode) {
+function classStr(classNode, isExport, isDefault) {
   if (!classNode) return '';
 
   const propertyList = [];
@@ -91,9 +91,17 @@ function classStr(classNode) {
     superClass = ` extends ${classNode.superClass.name}`;
   }
 
+  let exportDefaultDeclare = 'declare';
+  if (isExport) {
+    exportDefaultDeclare = 'export';
+    if (isDefault) {
+      exportDefaultDeclare = 'export default';
+    }
+  }
+
   return `
 ${generateDescription(classNode.leadingComments)}
-declare class ${classNode.id.name}${superClass} {
+${exportDefaultDeclare} class ${classNode.id.name}${superClass} {
   ${propertyList.join('\n')}
 
 }`;

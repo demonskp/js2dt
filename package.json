@@ -11,11 +11,19 @@
     "start": "node ./index.js",
     "lint": "eslint src/**"
   },
-  "keywords": ["JavaScript", "TypeScript", "d.ts", "jsdoc"],
+  "keywords": [
+    "JavaScript",
+    "TypeScript",
+    "d.ts",
+    "jsdoc"
+  ],
   "author": "demonskp",
   "license": "ISC",
   "dependencies": {
+    "@babel/generator": "^7.10.4",
     "@babel/parser": "^7.10.2",
+    "@babel/traverse": "^7.10.4",
+    "@babel/types": "^7.10.4",
     "@types/node": "^14.0.13",
     "commander": "^5.1.0"
   },

@@ -85,6 +85,7 @@ const TYPES = {
   ImportSpecifier: 'ImportSpecifier',
   ExportDefaultDeclaration: 'ExportDefaultDeclaration',
   ExportNamedDeclaration: 'ExportNamedDeclaration',
+  RestElement: 'RestElement',
 };
 
 /**

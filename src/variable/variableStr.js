@@ -4,6 +4,7 @@ const funcComment2FuncInfo = require('../func/funcComment2FuncInfo');
 const { getType, generateDescription, TYPES } = require('../utils');
 const { objectStr } = require('../object/objectStr');
 const config = require('../config/config');
+const { deelFunctionParamsType } = require('../func/funcStr');
 
 function variableFunctionExpressionStr(node, leadingComments) {
   if (!node) return '';
@@ -13,16 +14,7 @@ function variableFunctionExpressionStr(node, leadingComments) {
 
   const { params: paramsType, return: returnType } = funcComment2FuncInfo(leadingComments ? leadingComments[leadingComments.length - 1] : undefined);
 
-  const paramsStr = [];
-  for (let i = 0; i < params.length; i += 1) {
-    let typeStr = ': any';
-    paramsType.forEach((obj) => {
-      if (obj.name === params[i].name) {
-        typeStr = `: ${obj.type}`;
-      }
-    });
-    paramsStr.push(params[i].name + typeStr);
-  }
+  const paramsStr = deelFunctionParamsType(params, paramsType);
 
   return `${node.id.name} : (${paramsStr.join(', ')}) => ${returnType};`;
 }

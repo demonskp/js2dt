@@ -62,11 +62,20 @@ function variableCallStr(node, kind) {
 
   switch (id.type) {
     case TYPES.Identifier:
+      if (node.init.callee.name === 'require') {
+        return `import ${node.id.name} from '${node.init.arguments[0].value}'`;
+      }
       return `declare ${kind} ${node.id.name}: any;`;
 
     case TYPES.ObjectPattern:
       const { properties } = id;
       const objArr = [];
+      if (node.init.callee.name === 'require') {
+        properties.forEach((prop) => {
+          objArr.push(prop.key.name);
+        });
+        return `import {${objArr.join(',')}} from '${node.init.arguments[0].value}'`;
+      }
       properties.forEach((prop) => {
         objArr.push(`declare ${kind} ${prop.key.name}: any;`);
       });

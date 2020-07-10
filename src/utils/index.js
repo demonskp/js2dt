@@ -81,8 +81,11 @@ const TYPES = {
   UnaryExpression: 'UnaryExpression',
   BinaryExpression: 'BinaryExpression',
   ImportDeclaration: 'ImportDeclaration',
+  ImportDefaultSpecifier: 'ImportDefaultSpecifier',
+  ImportSpecifier: 'ImportSpecifier',
   ExportDefaultDeclaration: 'ExportDefaultDeclaration',
   ExportNamedDeclaration: 'ExportNamedDeclaration',
+  RestElement: 'RestElement',
 };
 
 /**

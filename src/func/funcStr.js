@@ -38,6 +38,18 @@ function deelFunctionParamsType(params, paramsType) {
         });
         paramsStr.push(name + typeStr);
         break;
+      case TYPES.RestElement:
+        name = param.argument.name;
+        paramsType.forEach((obj) => {
+          if (obj.name === name) {
+            typeStr = `: ${obj.type}`;
+          }
+        });
+        if (typeStr === ': any') {
+          typeStr += '[]';
+        }
+        paramsStr.push(`...${name}${typeStr}`);
+        break;
       default:
         break;
     }

@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const config = require('../config/config');
+const { TYPES } = require('../utils');
 
 /**
  * 导入路径保存下来
@@ -25,6 +26,7 @@ function importPathSave(router) {
  */
 function importStr(node) {
   if (!node) return '';
+  const importDefaultArr = [];
   const importArr = [];
   const { specifiers, source } = node;
   if (config.deep) {
@@ -32,9 +34,14 @@ function importStr(node) {
   }
 
   specifiers.forEach((specifier) => {
-    importArr.push(`declare const ${specifier.local.name}: any;`);
+    if (specifier.type === TYPES.ImportDefaultSpecifier) {
+      importDefaultArr.push(specifier.local.name);
+    } else if (specifier.type === TYPES.ImportSpecifier) {
+      importArr.push(specifier.local.name);
+    }
   });
-  return importArr.join('\n');
+  importDefaultArr.push(`{${importArr.join(',')}}`);
+  return `import ${importDefaultArr.join(',')} from '${source.value}';`;
 }
 
 module.exports = { importStr };

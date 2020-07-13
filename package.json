@@ -2,7 +2,7 @@
   "name": "js2dt",
   "version": "0.0.06",
   "description": "a lib for js generate d.ts with jsdoc",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "bin": {
     "js2dt": "bin/js2dt"
   },

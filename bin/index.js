@@ -2,8 +2,8 @@ const program = require('commander');
 const path = require('path');
 const child_process = require('child_process');
 const myPackage = require('../package.json');
-const { js2dtFromFile } = require('../src');
-const config = require('../src/config/config');
+const { js2dtFromFile } = require('../lib');
+const config = require('../lib/config');
 
 const srcFiles = function (val) {
   return val.split(' ');
@@ -78,5 +78,4 @@ getDirNodeModules((rootPath) => {
     srcList.push(src);
   });
   execut(srcList);
-  console.log('[info]', `Find file ${allList.length} fail ${errList.length}`);
 });

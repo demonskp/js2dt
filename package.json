@@ -7,7 +7,7 @@
     "js2dt": "bin/js2dt"
   },
   "scripts": {
-    "test": "jest ./test",
+    "test": "jest ./test/",
     "start": "node ./index.js",
     "lint": "eslint src/**"
   },

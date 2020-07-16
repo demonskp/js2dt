@@ -10,16 +10,16 @@ status：Alpha
 
 ## 安装
 
-通过npm安装：
+通过npm全局安装：
 
 ```
 npm install -g js2dt
 ```
 
-下载项目后在根目录执行安装：
+作为babel插件本地安装：
 
 ```
-npm install . -g
+npm install --save-dev js2dt
 ```
 
 安装完成功查看版本确定是否安装成功：
@@ -36,19 +36,60 @@ js2dt -v
 js2dt --src ./test.js
 ```
 
-同时生成多文件：
+配置babel插件：
 
 ```
-js2dt --src ./test.js,./index.js
+// babel.config.json
+
+"plugins": [
+    ["./node_modules/js2dt", {
+      "overwrite": true
+    }]
+  ]
 ```
 
-配置项：
+配合webpack使用：
+
+```
+// webpack.config.js
+
+rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: [
+              ["./node_modules/js2dt", {
+                "overwrite": true,
+                "outdir": 'dist/type',
+                "publicdir": ''
+              }]
+            ]
+          }
+        }
+      }
+    ]
+
+```
+
+命令配置项：
 
 配置项|简写|作用|备注
 ---|---|---|---
 --src [path]|-s|生成指定path路径的js文件的类型文件|-
 --deep | \ | 对文件引用的文件也生成类型文件 | 会排除引用的库
 --overwrite| -o | 生成时覆盖已存在的类型文件 | -
+
+插件配置项：
+
+配置项|类型|作用|备注
+---|---|---|---
+"overwrite"| boolean | 是否覆盖已存在的d.ts文件 | -
+"outdir"| string | 输出d.ts文件的目录 | 不写则会默认在当前目录
+"publicdir" | string| 源文件的公共路径 | 会去除原路径前的公共路径
 
 ## 注意项：
 

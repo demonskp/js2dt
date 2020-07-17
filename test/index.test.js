@@ -1,5 +1,5 @@
-const { transformCode2Ast } = require('../lib/utils');
-const { getDtsString } = require('../lib');
+const { transformCode2Ast } = require('../src/utils');
+const { getDtsString } = require('../src');
 
 test('测试', () => {
   const result = `const path = require('path');

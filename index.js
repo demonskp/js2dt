@@ -1,6 +1,6 @@
 const { resolve } = require('path');
-const { js2dtFromFile } = require('./lib');
-const config = require('./lib/config');
+const { js2dtFromFile } = require('./src');
+const config = require('./src/config');
 
 const path = resolve(__dirname, './testd.js');
 config.overwrite = true;

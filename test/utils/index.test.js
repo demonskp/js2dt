@@ -1,4 +1,4 @@
-const { parseArgv, getType } = require('../../lib/utils');
+const { parseArgv, getType } = require('../../src/utils');
 
 describe('工具类测试', () => {
   test('parseArgv', () => {

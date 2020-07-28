@@ -1,8 +1,6 @@
-const parser = require('@babel/parser');
 const generate = require('@babel/generator').default;
 const traverse = require('@babel/traverse').default;
 const fs = require('fs');
-const { resolve } = require('path');
 const { functionDeclaration } = require('./traverse/functionDeclaration');
 const { classDeclaration } = require('./traverse/classDeclaration');
 const { variableDeclaration } = require('./traverse/variableDeclaration');

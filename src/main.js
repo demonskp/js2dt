@@ -32,6 +32,13 @@ function configInit(overwrite, root) {
 
 module.exports = function main() {
   return {
+    pre: () => {
+      this.cache = { outPath: '', dtsCode: '' };
+    },
+    post: () => {
+      const { outPath, dtsCode } = this.cache;
+      saveTSDFile(outPath, dtsCode);
+    },
     visitor: {
       Program: {
         exit: (astPath, state) => {
@@ -52,7 +59,10 @@ module.exports = function main() {
           const ast = transformCode2Ast(data.toString());
           const dtsCode = getDtsString(ast);
 
-          saveTSDFile(outPath, dtsCode);
+          this.cache = {
+            outPath,
+            dtsCode,
+          };
         },
       },
     },
